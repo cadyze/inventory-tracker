@@ -17,7 +17,7 @@ export default function Home() {
     const inventoryList = []
     docs.forEach((doc) => {
       inventoryList.push({
-        name: doc.id,
+        itemName: doc.id,
         ...doc.data(),
       })
     }); 
@@ -25,7 +25,8 @@ export default function Home() {
   }
   
   const addItem = async (item) => {
-    const docRef = doc(collection(firestore, 'inventory'), item)
+    const uppercaseItem = item.toUpperCase() 
+    const docRef = doc(collection(firestore, 'inventory'), uppercaseItem)
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -93,15 +94,15 @@ export default function Home() {
         </Box>
       <Stack width={"800px"} height="300px" spacing={2} overflow={"auto"}>
         {
-          inventory.map(({name, quantity}) => (
-            <Box key={name} width="100%" minHeight={"150px"} display={"flex"} alignItems={"center"} justifyContent={"space-between"} bgcolor={"#f0f0f0"} padding={5}>
+          inventory.map(({itemName, quantity}) => (
+            <Box key={itemName} width="100%" minHeight={"150px"} display={"flex"} alignItems={"center"} justifyContent={"space-between"} bgcolor={"#f0f0f0"} padding={5}>
               <Typography variant="h3" color="#333" textAlign={"center"}>
-                {name.charAt(0).toUpperCase() + name.slice(1)}
+                {itemName.charAt(0).toUpperCase() + itemName.slice(1)}
               </Typography>
               <Typography variant="h3" color="#333" textAlign={"center"}>
                 {quantity}
               </Typography>
-              <Button variant="contained" onClick={() => removeItem(name)}>Remove Item</Button>
+              <Button variant="contained" onClick={() => removeItem(itemName)}>Remove Item</Button>
             </Box>
           ))
         }
