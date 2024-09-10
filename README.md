@@ -1,5 +1,6 @@
 A pantry tracker that uses a Firebase cloud storage to store data.
-DEMO: [https://inventory-tracker-six-jade.vercel.app/]
+
+DEMO: https://inventory-tracker-six-jade.vercel.app/
 
 ## Running Developmental Server
 
