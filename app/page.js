@@ -2,13 +2,14 @@
 import Image from "next/image";
 import {useState, useEffect} from 'react';
 import {firestore} from '@/firebase';
-import { Box, Modal, Typography, Stack, TextField, Button } from "@mui/material";
+import { Box, Modal, Typography, Stack, TextField, Button, Container, Grid } from "@mui/material";
 import { doc, collection, getDocs, query, QueryEndAtConstraint, deleteDoc, getDoc, setDoc} from "firebase/firestore"
 import { setLazyProp } from "next/dist/server/api-utils";
+import UploadImage from './components/UploadImage';
 
 export default function Home() {
   const [inventory, setInventory ] = useState([])
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('')
 
   const updateInventory = async () => {
@@ -85,6 +86,29 @@ export default function Home() {
         
       </Modal>
       <Typography variant="h1">Inventory Manager</Typography>
+
+      {/* Implementing AWS Rekognition */}
+      
+      <Container maxWidth="md" sx={{ mt: 4 }}>
+        {/* Header Section */}
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography variant="h2" component="h1" gutterBottom>
+            Amazon Rekognition Image Upload
+          </Typography>
+          <Typography variant="h6" color="textSecondary">
+            Upload an image to analyze its contents using Amazon Rekognition
+          </Typography>
+        </Box>
+
+        {/* Main Content Section */}
+        <Grid container justifyContent="center">
+          <Grid item xs={12} sm={8}>
+            {/* Import and Use the UploadImage component */}
+            <UploadImage />
+          </Grid>
+        </Grid>
+      </Container>
+
       <Button variant="contained" onClick={() => {
         handleOpen()
       }}>Add New Item</Button>
