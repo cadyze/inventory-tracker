@@ -90,16 +90,6 @@ export default function Home() {
       {/* Implementing AWS Rekognition */}
       
       <Container maxWidth="md" sx={{ mt: 4 }}>
-        {/* Header Section */}
-        <Box sx={{ textAlign: 'center', mb: 4 }}>
-          <Typography variant="h2" component="h1" gutterBottom>
-            Amazon Rekognition Image Upload
-          </Typography>
-          <Typography variant="h6" color="textSecondary">
-            Upload an image to analyze its contents using Amazon Rekognition
-          </Typography>
-        </Box>
-
         {/* Main Content Section */}
         <Grid container justifyContent="center">
           <Grid item xs={12} sm={8}>

@@ -16,7 +16,6 @@ export default function UploadImage() {
 
       setLoading(true); // Start loading spinner
       
-      console.log("HIOWEF");
       try {
         const response = await fetch('./api/rekognition', {
           method: 'POST',
@@ -42,7 +41,7 @@ export default function UploadImage() {
     };
 
     reader.readAsDataURL(file);
-    setImage(URL.createObjectURL(file)); // Display image preview
+    setImage(URL.createObjectURL(file));
   };
 
   return (
