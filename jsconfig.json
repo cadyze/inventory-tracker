@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",  // This points to the project root
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]  // Maps `@/firebase` to `src/firebase`
     }
   }
 }

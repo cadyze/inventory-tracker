@@ -3,3 +3,12 @@
   padding: 0;
   margin: 0;
 }
+
+:root {
+  --font-geist-sans: 'Geist Sans', sans-serif;
+  --font-geist-mono: 'Geist Mono', monospace;
+}
+
+body {
+  font-family: 'Times New Roman', Times, serif !important;
+}
