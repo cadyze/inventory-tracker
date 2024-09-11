@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Box, Button, Stack, Typography, TextField } from '@mui/material';
 import UploadImage from './components/UploadImage';
 import { firestore } from './firebase';
-import { collection, getDocs, setDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, setDoc, deleteDoc, doc, getDoc, query } from "firebase/firestore";
 
 interface InventoryItem {
   itemName: string;
@@ -28,38 +28,38 @@ export default function InventoryPage() {
 
     fetchInventory();
   }, []);
+  
+  const updateQuantityInFirestore = async (itemName: string, quantity: number) => {
+    const itemRef = doc(firestore, 'inventory', itemName);
+    await setDoc(itemRef, { quantity }, { merge: true });
+  };
+  
+  const updateInventory = async () => {
+    const snapshot = query(collection(firestore, 'inventory'))
+    const docs = await getDocs(snapshot)
+    let inventoryList: InventoryItem[] = [];
+    docs.forEach((doc) => {
+      const {quantity} = doc.data()
+      inventoryList.push({
+        itemName: doc.id,
+        quantity: quantity,
+      })
+    }); 
+    setInventory(inventoryList)
+  }
 
   const addItem = async (itemName: string) => {
     itemName = itemName.toUpperCase();
   
-    let updatedInventory: InventoryItem[] = [];
-  
-    // Update state first
-    setInventory((prevInventory) => {
-      const itemIndex = prevInventory.findIndex(item => item.itemName === itemName);
-  
-      if (itemIndex !== -1) {
-        // Update the quantity in the state
-        const updatedInventoryLocal = [...prevInventory];
-        updatedInventoryLocal[itemIndex].quantity += 1;
-        updatedInventory = updatedInventoryLocal; // Capture the updated state
-        return updatedInventoryLocal;
-      } else {
-        // Add new item to the state
-        const newInventory = [...prevInventory, { itemName, quantity: 1 }];
-        updatedInventory = newInventory; // Capture the updated state
-        return newInventory;
-      }
-    });
-  
-    // Perform the Firestore update after the state update
-    const itemIndex = updatedInventory.findIndex(item => item.itemName === itemName);
-    
-    if (itemIndex !== -1) {
-      // Update Firestore after the state change is completed
-      const itemRef = doc(firestore, 'inventory', itemName);
-      await setDoc(itemRef, { quantity: updatedInventory[itemIndex].quantity });
+    let docRef = doc(collection(firestore, 'inventory'), itemName);
+    let docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const {quantity} = docSnap.data()
+      await setDoc(docRef, {quantity: quantity + 1})
+    } else {
+      await setDoc(docRef, {quantity: 1})
     }
+    await updateInventory();
   };
   
   
@@ -68,11 +68,6 @@ export default function InventoryPage() {
 
     const itemRef = doc(firestore, 'inventory', itemName);
     await deleteDoc(itemRef);
-  };
-  
-  const updateQuantityInFirestore = async (itemName: string, quantity: number) => {
-    const itemRef = doc(firestore, 'inventory', itemName);
-    await setDoc(itemRef, { quantity }, { merge: true });
   };
 
   return (
